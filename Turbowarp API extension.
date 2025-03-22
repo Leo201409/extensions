@@ -1,0 +1,65 @@
+(function(Scratch) {
+    'use strict';
+
+    class CustomAPIExtension {
+        constructor() {}
+
+        // Function to fetch data from a custom API
+        async fetchData(endpoint = '') {
+            try {
+                const response = await fetch(`https://your-api.com/${endpoint}`);
+                const data = await response.json();
+                return JSON.stringify(data); // Convert JSON to string for Scratch
+            } catch (error) {
+                return "Error fetching data!";
+            }
+        }
+
+        // Function to send data to the API
+        async sendData(endpoint, message) {
+            try {
+                const response = await fetch(`https://your-api.com/${endpoint}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: message })
+                });
+                const data = await response.json();
+                return JSON.stringify(data);
+            } catch (error) {
+                return "Error sending data!";
+            }
+        }
+
+        // Define Blocks
+        getInfo() {
+            return {
+                id: 'customAPI',
+                name: 'Custom API',
+                color1: '#4A90E2',
+                blocks: [
+                    {
+                        opcode: 'fetchData',
+                        blockType: Scratch.BlockType.REPORTER,
+                        text: 'Get data from [ENDPOINT]',
+                        arguments: {
+                            ENDPOINT: { type: Scratch.ArgumentType.STRING, defaultValue: 'data' }
+                        }
+                    },
+                    {
+                        opcode: 'sendData',
+                        blockType: Scratch.BlockType.REPORTER,
+                        text: 'Send [MESSAGE] to [ENDPOINT]',
+                        arguments: {
+                            ENDPOINT: { type: Scratch.ArgumentType.STRING, defaultValue: 'post-data' },
+                            MESSAGE: { type: Scratch.ArgumentType.STRING, defaultValue: 'Hello API' }
+                        }
+                    }
+                ]
+            };
+        }
+    }
+
+    // Register the extension in TurboWarp
+    Scratch.extensions.register(new CustomAPIExtension());
+
+})(Scratch);
